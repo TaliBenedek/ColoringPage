@@ -21,7 +21,9 @@ public class ImageToColoringPageConverter
         BufferedImage image = ImageIO.read(inputFile);
         BufferedImage grayImage = toGrayscaleImage(image);
         BufferedImage invertedImage = invertImage(grayImage);
-        return null;
+        BufferedImage blurredImage = blurImage(invertedImage);
+        BufferedImage finalImage = dodgeAndMerge(blurredImage, grayImage);
+        return finalImage;
     }
 
     /**
