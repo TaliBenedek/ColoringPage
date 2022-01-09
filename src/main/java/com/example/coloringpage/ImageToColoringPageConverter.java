@@ -107,10 +107,15 @@ public class ImageToColoringPageConverter
      */
     private BufferedImage dodgeAndMerge(BufferedImage blurredImage, BufferedImage grayImage)
     {
-        //TODO code
-        BufferedImage clonedImage = clone(blurredImage);
-
-        return null;
+        BufferedImage dividedImage = clone(blurredImage);
+        for(int x = 0; x < grayImage.getHeight(); x++)
+        {
+            for (int y = 0; y < grayImage.getWidth(); y++)
+            {
+                dividedImage.setRGB(x, y, (blurredImage.getRGB(x,y)+grayImage.getRGB(x,y))/grayImage.getRGB(x,y));
+            }
+        }
+        return dividedImage;
     }
 
     /**
