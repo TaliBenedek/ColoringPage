@@ -2,9 +2,7 @@ package com.example.coloringpage;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
+import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -77,16 +75,51 @@ public class ImageToColoringPageConverter
         return image;
     }
 
+    /**
+     *
+     * @param image The image to be blurred
+     * @return A BufferedImage that is the blurred version of the given image
+     * This is done by dulling the picture using the convolveOp class
+     */
     private BufferedImage blurImage(BufferedImage image)
     {
-        //TODO code
-        return null;
+        int radius = 11;
+        int size = radius * 2 + 1;
+        float weight = 1.0f / (size * size);
+        float[] data = new float[size * size];
+
+        for (int i = 0; i < data.length; i++) {
+            data[i] = weight;
+        }
+
+        Kernel kernel = new Kernel(size, size, data);
+        ConvolveOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_ZERO_FILL, null);
+        image = op.filter(image, null);
+        return image;
     }
 
+    /**
+     *
+     * @param blurredImage that will be added and divided by the
+     * @param grayImage
+     * @return A BufferedImage that has sharpened the outlines and white
+     * background to set up the final coloring page look that is desired
+     */
     private BufferedImage dodgeAndMerge(BufferedImage blurredImage, BufferedImage grayImage)
     {
-        //TODO code
-        return null;
+        BufferedImage dividedImage = clone(blurredImage);
+        for(int x = 0; x < grayImage.getHeight(); x++)
+        {
+            for (int y = 0; y < grayImage.getWidth(); y++)
+            {
+                if (grayImage.getRGB(x,y) == 0)
+                {
+                    grayImage.setRGB(x,y,1);
+                }
+                dividedImage.setRGB(x, y, (blurredImage.getRGB(x,y)+grayImage.getRGB(x,y))/grayImage.getRGB(x,y));
+            }
+        }
+        return dividedImage;
     }
 
     /**
