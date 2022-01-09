@@ -112,6 +112,10 @@ public class ImageToColoringPageConverter
         {
             for (int y = 0; y < grayImage.getWidth(); y++)
             {
+                if (grayImage.getRGB(x,y) == 0)
+                {
+                    grayImage.setRGB(x,y,1);
+                }
                 dividedImage.setRGB(x, y, (blurredImage.getRGB(x,y)+grayImage.getRGB(x,y))/grayImage.getRGB(x,y));
             }
         }
