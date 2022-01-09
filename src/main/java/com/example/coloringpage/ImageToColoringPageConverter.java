@@ -2,9 +2,7 @@ package com.example.coloringpage;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
+import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -98,5 +96,17 @@ public class ImageToColoringPageConverter
     {
         //TODO code
         return null;
+    }
+
+    /**
+     * https://bytenota.com/java-cloning-a-bufferedimage-object/
+     * @param image Image to be cloned
+     * @return BufferedImage clone
+     */
+    private static BufferedImage clone(BufferedImage image) {
+        ColorModel colorModel = image.getColorModel();
+        WritableRaster raster = image.copyData(null);
+        boolean isAlphaPremultiplied = colorModel.isAlphaPremultiplied();
+        return new BufferedImage(colorModel, raster, isAlphaPremultiplied, null);
     }
 }
