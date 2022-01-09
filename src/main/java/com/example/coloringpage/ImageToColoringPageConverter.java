@@ -75,6 +75,12 @@ public class ImageToColoringPageConverter
         return image;
     }
 
+    /**
+     *
+     * @param image The image to be blurred
+     * @return A BufferedImage that is the blurred version of the given image
+     * This is done by dulling the picture using the convolveOp class
+     */
     private BufferedImage blurImage(BufferedImage image)
     {
         int radius = 11;
@@ -92,9 +98,18 @@ public class ImageToColoringPageConverter
         return image;
     }
 
+    /**
+     *
+     * @param blurredImage that will be added and divided by the
+     * @param grayImage
+     * @return A BufferedImage that has sharpened the outlines and white
+     * background to set up the final coloring page look that is desired
+     */
     private BufferedImage dodgeAndMerge(BufferedImage blurredImage, BufferedImage grayImage)
     {
         //TODO code
+        BufferedImage clonedImage = clone(blurredImage);
+
         return null;
     }
 
