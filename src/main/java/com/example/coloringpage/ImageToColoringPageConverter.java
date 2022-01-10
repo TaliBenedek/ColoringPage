@@ -8,7 +8,11 @@ import java.io.IOException;
 
 public class ImageToColoringPageConverter
 {
+    private final int RGB_MIN = 0;
     private final int RGB_MAX = 255;
+    private final int BLACK_INPUT_LEVEL = 140;
+    private final int WHITE_INPUT_LEVEL = 245;
+    private final int INPUT_LEVEL_RANGE = WHITE_INPUT_LEVEL - BLACK_INPUT_LEVEL;
 
     /**
      *
@@ -33,22 +37,23 @@ public class ImageToColoringPageConverter
      */
     private BufferedImage toGrayscaleImage(BufferedImage image)
     {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        for(int x = 0; x < height; x++)
+        BufferedImage grayImage = clone(image);
+        int width = grayImage.getWidth();
+        int height = grayImage.getHeight();
+        for(int y = 0; y < height; y++)
         {
-            for(int y = 0; y < width; y++)
+            for(int x = 0; x < width; x++)
             {
-                Color originalColor = new Color(image.getRGB(x, y)); //RGB value of pixel at location (x, y)
+                Color originalColor = new Color(grayImage.getRGB(x, y)); //RGB value of pixel at location (x, y)
                 int red = (int)(originalColor.getRed() * 0.299);
                 int green = (int)(originalColor.getGreen() * 0.587);
                 int blue = (int)(originalColor.getBlue() * 0.114);
                 int gray = red + green + blue;
                 Color newColor = new Color(gray, gray, gray);
-                image.setRGB(x, y, newColor.getRGB()); //sets the RGB of pixel (x, y) to its new grayscale color
+                grayImage.setRGB(x, y, newColor.getRGB()); //sets the RGB of pixel (x, y) to its new grayscale color
             }
         }
-        return image;
+        return grayImage;
     }
 
     /**
@@ -61,18 +66,21 @@ public class ImageToColoringPageConverter
      */
     private BufferedImage invertImage(BufferedImage image)
     {
-        for (int x = 0; x < image.getWidth(); x++)
+        BufferedImage invertedImage = clone(image);
+        int width = invertedImage.getWidth();
+        int height = invertedImage.getHeight();
+        for(int y = 0; y < height; y++)
         {
-            for (int y = 0; y < image.getHeight(); y++)
+            for(int x = 0; x < width; x++)
             {
-                Color color = new Color(image.getRGB(x, y));
+                Color color = new Color(invertedImage.getRGB(x, y));
                 color = new Color(RGB_MAX - color.getRed(),
                                 RGB_MAX - color.getGreen(),
                                 RGB_MAX - color.getBlue());
-                image.setRGB(x, y, color.getRGB());
+                invertedImage.setRGB(x, y, color.getRGB());
             }
         }
-        return image;
+        return invertedImage;
     }
 
     /**
@@ -83,47 +91,82 @@ public class ImageToColoringPageConverter
      */
     private BufferedImage blurImage(BufferedImage image)
     {
+        BufferedImage blurredImage = clone(image);
         int radius = 11;
         int size = radius * 2 + 1;
         float weight = 1.0f / (size * size);
         float[] data = new float[size * size];
 
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < data.length; i++)
+        {
             data[i] = weight;
         }
 
         Kernel kernel = new Kernel(size, size, data);
         ConvolveOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_ZERO_FILL, null);
-        image = op.filter(image, null);
-        return image;
+        blurredImage = op.filter(blurredImage, null);
+        return blurredImage;
     }
 
     /**
      *
-     * @param blurredImage that will be added and divided by the
-     * @param grayImage
+     * @param top that will be added and divided by the
+     * @param bottom
      * @return A BufferedImage that has sharpened the outlines and white
      * background to set up the final coloring page look that is desired
      */
-    private BufferedImage dodgeAndMerge(BufferedImage blurredImage, BufferedImage grayImage)
+    private BufferedImage dodgeAndMerge(BufferedImage top, BufferedImage bottom)
     {
-        BufferedImage dividedImage = clone(blurredImage);
-        for(int x = 0; x < grayImage.getHeight(); x++)
-        {
-            for (int y = 0; y < grayImage.getWidth(); y++)
-            {
-                if (grayImage.getRGB(x,y) == 0)
+        BufferedImage image = clone(top);
+
+        int width = top.getWidth();
+        int height = top.getHeight();
+
+        for(int y = 0; y < height; y++) {
+            for(int x = 0; x < width; x++) {
+                int topValue = new Color(top.getRGB(x, y)).getRed();
+                int bottomValue = new Color(bottom.getRGB(x, y)).getRed();
+
+                //ensures that the next statement won't divide by zero
+                if(bottomValue == RGB_MAX)
                 {
-                    grayImage.setRGB(x,y,1);
+                    bottomValue--;
                 }
-                dividedImage.setRGB(x, y, (blurredImage.getRGB(x,y)+grayImage.getRGB(x,y))/grayImage.getRGB(x,y));
+                int newValue = (topValue + 1) * RGB_MAX / (RGB_MAX - bottomValue);
+
+                newValue = adjustPixelValue(newValue);
+
+                Color newColor = new Color(newValue, newValue, newValue);
+                image.setRGB(x, y, newColor.getRGB());
             }
         }
-        return dividedImage;
+        return image;
     }
 
     /**
-     * https://bytenota.com/java-cloning-a-bufferedimage-object/
+     * This method adjusts the pixel value to ensure it is within RGB range and
+     * corrects the color balance
+     * @param pixel whose value is to be adjusted
+     * @return adjusted pixel value
+     */
+    private int adjustPixelValue(int pixel)
+    {
+        if (pixel < BLACK_INPUT_LEVEL)
+        {
+            pixel = RGB_MIN;
+        }
+        else if (pixel > RGB_MAX)
+        {
+            pixel = RGB_MAX;
+        }
+        else
+        {
+            pixel = ((pixel - BLACK_INPUT_LEVEL) / INPUT_LEVEL_RANGE) * RGB_MAX;
+        }
+        return pixel;
+    }
+
+    /**
      * @param image Image to be cloned
      * @return BufferedImage clone
      */

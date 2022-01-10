@@ -24,12 +24,12 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'com.example.coloringpage'
-    mainClass = 'com.example.coloringpage.HelloApplication'
+    mainClass = 'com.example.coloringpage.ColoringPageApplication'
 }
 
 javafx {
     version = '16'
-    modules = ['javafx.controls', 'javafx.fxml']
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing']
 }
 
 dependencies {
