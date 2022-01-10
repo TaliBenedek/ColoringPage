@@ -56,7 +56,10 @@ public class ColoringPageController
         }
         catch (IOException e)
         {
-            JOptionPane.showInputDialog("That is not a valid file path.\nPlease try again.");
+            JOptionPane.showMessageDialog(null,
+                                          "That is not a valid file path.\nPlease try again.",
+                                          "Error",
+                                          1);
         }
     }
 }
