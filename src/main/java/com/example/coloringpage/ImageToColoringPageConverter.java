@@ -31,24 +31,25 @@ public class ImageToColoringPageConverter
      * @param image The image to be converted to Grayscale
      * @return A BufferedImage that is the Grayscale version of the given image
      */
-    private BufferedImage toGrayscaleImage(BufferedImage image)
+    public BufferedImage toGrayscaleImage(BufferedImage image)
     {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        for(int x = 0; x < height; x++)
+        BufferedImage grayImage = clone(image);
+        int width = grayImage.getWidth();
+        int height = grayImage.getHeight();
+        for(int y = 0; y < height; y++)
         {
-            for(int y = 0; y < width; y++)
+            for(int x = 0; x < width; x++)
             {
-                Color originalColor = new Color(image.getRGB(x, y)); //RGB value of pixel at location (x, y)
+                Color originalColor = new Color(grayImage.getRGB(x, y)); //RGB value of pixel at location (x, y)
                 int red = (int)(originalColor.getRed() * 0.299);
                 int green = (int)(originalColor.getGreen() * 0.587);
                 int blue = (int)(originalColor.getBlue() * 0.114);
                 int gray = red + green + blue;
                 Color newColor = new Color(gray, gray, gray);
-                image.setRGB(x, y, newColor.getRGB()); //sets the RGB of pixel (x, y) to its new grayscale color
+                grayImage.setRGB(x, y, newColor.getRGB()); //sets the RGB of pixel (x, y) to its new grayscale color
             }
         }
-        return image;
+        return grayImage;
     }
 
     /**
@@ -59,20 +60,23 @@ public class ImageToColoringPageConverter
      * This is done by finding how far away the R, G and B values of each pixel are from 255
      * eg: the negative of a pixel with RGB value of (200, 5, 67) is (55, 250, 188)
      */
-    private BufferedImage invertImage(BufferedImage image)
+    public BufferedImage invertImage(BufferedImage image)
     {
-        for (int x = 0; x < image.getWidth(); x++)
+        BufferedImage invertedImage = clone(image);
+        int width = invertedImage.getWidth();
+        int height = invertedImage.getHeight();
+        for(int y = 0; y < height; y++)
         {
-            for (int y = 0; y < image.getHeight(); y++)
+            for(int x = 0; x < width; x++)
             {
-                Color color = new Color(image.getRGB(x, y));
+                Color color = new Color(invertedImage.getRGB(x, y));
                 color = new Color(RGB_MAX - color.getRed(),
                                 RGB_MAX - color.getGreen(),
                                 RGB_MAX - color.getBlue());
-                image.setRGB(x, y, color.getRGB());
+                invertedImage.setRGB(x, y, color.getRGB());
             }
         }
-        return image;
+        return invertedImage;
     }
 
     /**
@@ -81,8 +85,9 @@ public class ImageToColoringPageConverter
      * @return A BufferedImage that is the blurred version of the given image
      * This is done by dulling the picture using the convolveOp class
      */
-    private BufferedImage blurImage(BufferedImage image)
+    public BufferedImage blurImage(BufferedImage image)
     {
+        BufferedImage blurredImage = clone(image);
         int radius = 11;
         int size = radius * 2 + 1;
         float weight = 1.0f / (size * size);
@@ -94,8 +99,8 @@ public class ImageToColoringPageConverter
 
         Kernel kernel = new Kernel(size, size, data);
         ConvolveOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_ZERO_FILL, null);
-        image = op.filter(image, null);
-        return image;
+        blurredImage = op.filter(blurredImage, null);
+        return blurredImage;
     }
 
     /**
@@ -105,12 +110,14 @@ public class ImageToColoringPageConverter
      * @return A BufferedImage that has sharpened the outlines and white
      * background to set up the final coloring page look that is desired
      */
-    private BufferedImage dodgeAndMerge(BufferedImage blurredImage, BufferedImage grayImage)
+    public BufferedImage dodgeAndMerge(BufferedImage blurredImage, BufferedImage grayImage)
     {
         BufferedImage dividedImage = clone(blurredImage);
-        for(int x = 0; x < grayImage.getHeight(); x++)
+        int width = grayImage.getWidth();
+        int height = grayImage.getHeight();
+        for(int y = 0; y < height; y++)
         {
-            for (int y = 0; y < grayImage.getWidth(); y++)
+            for(int x = 0; x < width; x++)
             {
                 if (grayImage.getRGB(x,y) == 0)
                 {
