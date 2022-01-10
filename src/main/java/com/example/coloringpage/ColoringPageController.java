@@ -1,5 +1,6 @@
 package com.example.coloringpage;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -49,7 +50,7 @@ public class ColoringPageController
             File file = new File(fileNameTextField.getText());
             BufferedImage originalImage = ImageIO.read(file);
             originalImageView.setImage(SwingFXUtils.toFXImage(originalImage, null));
-            
+
             BufferedImage bufferedImage = converter.getColoringPage(file);
             Image finalImage = SwingFXUtils.toFXImage(bufferedImage, null);
             modifiedImageView.setImage(finalImage);
