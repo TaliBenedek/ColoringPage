@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -46,8 +47,12 @@ public class ColoringPageController
         try
         {
             File file = new File(fileNameTextField.getText());
+            BufferedImage originalImage = ImageIO.read(file);
+            originalImageView.setImage(SwingFXUtils.toFXImage(originalImage, null));
+            
             BufferedImage bufferedImage = converter.getColoringPage(file);
             Image finalImage = SwingFXUtils.toFXImage(bufferedImage, null);
+            modifiedImageView.setImage(finalImage);
         }
         catch (IOException e)
         {
