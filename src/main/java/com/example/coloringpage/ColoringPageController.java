@@ -51,8 +51,7 @@ public class ColoringPageController
             BufferedImage originalImage = ImageIO.read(file);
             originalImageView.setImage(SwingFXUtils.toFXImage(originalImage, null));
 
-            BufferedImage bufferedImage = converter.getColoringPage(file);
-            Image finalImage = SwingFXUtils.toFXImage(bufferedImage, null);
+            Image finalImage = SwingFXUtils.toFXImage(converter.getColoringPage(file), null);
             modifiedImageView.setImage(finalImage);
         }
         catch (IOException e)

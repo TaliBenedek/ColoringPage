@@ -8,7 +8,11 @@ import java.io.IOException;
 
 public class ImageToColoringPageConverter
 {
+    private final int RGB_MIN = 0;
     private final int RGB_MAX = 255;
+    private final int BLACK_INPUT_LEVEL = 140;
+    private final int WHITE_INPUT_LEVEL = 245;
+    private final int INPUT_LEVEL_RANGE = WHITE_INPUT_LEVEL - BLACK_INPUT_LEVEL;
 
     /**
      *
@@ -31,7 +35,7 @@ public class ImageToColoringPageConverter
      * @param image The image to be converted to Grayscale
      * @return A BufferedImage that is the Grayscale version of the given image
      */
-    public BufferedImage toGrayscaleImage(BufferedImage image)
+    private BufferedImage toGrayscaleImage(BufferedImage image)
     {
         BufferedImage grayImage = clone(image);
         int width = grayImage.getWidth();
@@ -60,7 +64,7 @@ public class ImageToColoringPageConverter
      * This is done by finding how far away the R, G and B values of each pixel are from 255
      * eg: the negative of a pixel with RGB value of (200, 5, 67) is (55, 250, 188)
      */
-    public BufferedImage invertImage(BufferedImage image)
+    private BufferedImage invertImage(BufferedImage image)
     {
         BufferedImage invertedImage = clone(image);
         int width = invertedImage.getWidth();
@@ -85,7 +89,7 @@ public class ImageToColoringPageConverter
      * @return A BufferedImage that is the blurred version of the given image
      * This is done by dulling the picture using the convolveOp class
      */
-    public BufferedImage blurImage(BufferedImage image)
+    private BufferedImage blurImage(BufferedImage image)
     {
         BufferedImage blurredImage = clone(image);
         int radius = 11;
@@ -93,7 +97,8 @@ public class ImageToColoringPageConverter
         float weight = 1.0f / (size * size);
         float[] data = new float[size * size];
 
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < data.length; i++)
+        {
             data[i] = weight;
         }
 
@@ -105,32 +110,63 @@ public class ImageToColoringPageConverter
 
     /**
      *
-     * @param blurredImage that will be added and divided by the
-     * @param grayImage
+     * @param top that will be added and divided by the
+     * @param bottom
      * @return A BufferedImage that has sharpened the outlines and white
      * background to set up the final coloring page look that is desired
      */
-    public BufferedImage dodgeAndMerge(BufferedImage blurredImage, BufferedImage grayImage)
+    private BufferedImage dodgeAndMerge(BufferedImage top, BufferedImage bottom)
     {
-        BufferedImage dividedImage = clone(blurredImage);
-        int width = grayImage.getWidth();
-        int height = grayImage.getHeight();
-        for(int y = 0; y < height; y++)
-        {
-            for(int x = 0; x < width; x++)
-            {
-                if (grayImage.getRGB(x,y) == 0)
+        BufferedImage image = clone(top);
+
+        int width = top.getWidth();
+        int height = top.getHeight();
+
+        for(int y = 0; y < height; y++) {
+            for(int x = 0; x < width; x++) {
+                int topValue = new Color(top.getRGB(x, y)).getRed();
+                int bottomValue = new Color(bottom.getRGB(x, y)).getRed();
+
+                //ensures that the next statement won't divide by zero
+                if(bottomValue == RGB_MAX)
                 {
-                    grayImage.setRGB(x,y,1);
+                    bottomValue--;
                 }
-                dividedImage.setRGB(x, y, (blurredImage.getRGB(x,y)+grayImage.getRGB(x,y))/grayImage.getRGB(x,y));
+                int newValue = (topValue + 1) * RGB_MAX / (RGB_MAX - bottomValue);
+
+                newValue = adjustPixelValue(newValue);
+
+                Color newColor = new Color(newValue, newValue, newValue);
+                image.setRGB(x, y, newColor.getRGB());
             }
         }
-        return dividedImage;
+        return image;
     }
 
     /**
-     * https://bytenota.com/java-cloning-a-bufferedimage-object/
+     * This method adjusts the pixel value to ensure it is within RGB range and
+     * corrects the color balance
+     * @param pixel whose value is to be adjusted
+     * @return adjusted pixel value
+     */
+    private int adjustPixelValue(int pixel)
+    {
+        if (pixel < BLACK_INPUT_LEVEL)
+        {
+            pixel = RGB_MIN;
+        }
+        else if (pixel > RGB_MAX)
+        {
+            pixel = RGB_MAX;
+        }
+        else
+        {
+            pixel = ((pixel - BLACK_INPUT_LEVEL) / INPUT_LEVEL_RANGE) * RGB_MAX;
+        }
+        return pixel;
+    }
+
+    /**
      * @param image Image to be cloned
      * @return BufferedImage clone
      */
