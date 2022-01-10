@@ -20,12 +20,11 @@
        <RowConstraints maxHeight="394.99999618530273" minHeight="10.0" prefHeight="394.99999618530273" vgrow="SOMETIMES" />
      </rowConstraints>
       <children>
-
-          <Label fx:id="welcomeText" text="Upload a photo here:" />
-          <Button onAction="#onHelloButtonClick" text="upload" GridPane.columnIndex="2" />
-         <ImageView fitHeight="350.0" fitWidth="260.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-         <ImageView fitHeight="350.0" fitWidth="260.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-         <TextField GridPane.columnIndex="1" />
+          <Label fx:id="uploadLabel" text="Upload a photo here:" />
+          <Button fx:id="uploadButton" onAction="#onUploadButtonClick" text="upload" GridPane.columnIndex="2" />
+          <ImageView fx:id="originalImageView" fitHeight="350.0" fitWidth="260.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <ImageView fx:id="modifiedImageView" fitHeight="350.0" fitWidth="260.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+          <TextField fx:id="fileNameTextField" GridPane.columnIndex="1" />
       </children>
    </GridPane>
 </VBox>
