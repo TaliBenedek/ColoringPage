@@ -25,8 +25,8 @@
           <Button fx:id="browseButton" onAction="#onBrowseButtonClick" text="Browse" GridPane.rowIndex="0" GridPane.columnIndex="2" />
           <Button fx:id="convertButton" onAction="#onConvertButtonClick" text="Convert" GridPane.rowIndex="0" GridPane.columnIndex="3" />
           <Button fx:id="saveButton" onAction="#onSaveButtonClick" text="Save" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
-          <ImageView fx:id="originalImageView" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-          <ImageView fx:id="modifiedImageView" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+          <ImageView fx:id="originalImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+          <ImageView fx:id="modifiedImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" GridPane.columnIndex="0" />
 
 
       </children>
