@@ -4,6 +4,7 @@ module com.example.coloringpage {
     requires javafx.base;
     requires javafx.swing;
     requires java.desktop;
+    requires org.junit.jupiter.api;
 
 
     opens com.example.coloringpage to javafx.fxml;
