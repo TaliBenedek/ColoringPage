@@ -15,7 +15,6 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 public class ColoringPageController
 {
@@ -47,7 +46,7 @@ public class ColoringPageController
 
     public ColoringPageController()
     {
-       this.converter = new ImageToColoringPageConverter();
+        this.converter = new ImageToColoringPageConverter();
 
     }
 
@@ -55,10 +54,18 @@ public class ColoringPageController
     {
         try
         {
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("All Images", "*.*"),
+                    new FileChooser.ExtensionFilter("JPG", "*.jpg"),
+                    new FileChooser.ExtensionFilter("PNG", "*.png")
+            );
             file = fileChooser.showOpenDialog(null);
-            fileNameTextField.setText(file.getAbsolutePath());
-            BufferedImage originalImage = ImageIO.read(file);
-            originalImageView.setImage(SwingFXUtils.toFXImage(originalImage, null));
+            if (file != null)
+            {
+                fileNameTextField.setText(file.getAbsolutePath());
+                BufferedImage originalImage = ImageIO.read(file);
+                originalImageView.setImage(SwingFXUtils.toFXImage(originalImage, null));
+            }
         }
 
         catch (IOException e)
@@ -90,24 +97,33 @@ public class ColoringPageController
     public void onSaveButtonClick(ActionEvent actionEvent)
     {
         File saveFile = fileChooser.showSaveDialog(null);
-        try
+        if (saveFile != null)
         {
-            String extension = getExtensionByStringHandling(saveFile.getName()).toString();
-            ImageIO.write(bufferedFinalImage, extension, file);
+            try
+            {
+                ImageIO.write(SwingFXUtils.fromFXImage(modifiedImageView.getImage(),
+                                                       null), "png", saveFile);
+            }
+            catch (IOException ex)
+            {
+                JOptionPane.showMessageDialog(null,
+                                              "There was an error in saving the file.\nPlease try again.",
+                                              "Error",
+                                              1);
+            }
         }
-        catch (IOException e)
-        {
-            JOptionPane.showMessageDialog(null,
-                                          "There was an error in saving the file.\nPlease try again.",
-                                          "Error",
-                                          1);
-        }
-    }
-
-    private Optional<String> getExtensionByStringHandling(String filename)
-    {
-        return Optional.ofNullable(filename)
-                .filter(f -> f.contains("."))
-                .map(f -> f.substring(filename.lastIndexOf(".") + 1));
+//        File saveFile = fileChooser.showSaveDialog(null);
+//        try
+//        {
+//            String extension = getExtensionByStringHandling(saveFile.getName()).toString();
+//            ImageIO.write(bufferedFinalImage, extension, file);
+//        }
+//        catch (IOException e)
+//        {
+//            JOptionPane.showMessageDialog(null,
+//                                          "There was an error in saving the file.\nPlease try again.",
+//                                          "Error",
+//                                          1);
+//        }
     }
 }
