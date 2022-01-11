@@ -112,18 +112,5 @@ public class ColoringPageController
                                               1);
             }
         }
-//        File saveFile = fileChooser.showSaveDialog(null);
-//        try
-//        {
-//            String extension = getExtensionByStringHandling(saveFile.getName()).toString();
-//            ImageIO.write(bufferedFinalImage, extension, file);
-//        }
-//        catch (IOException e)
-//        {
-//            JOptionPane.showMessageDialog(null,
-//                                          "There was an error in saving the file.\nPlease try again.",
-//                                          "Error",
-//                                          1);
-//        }
     }
 }
