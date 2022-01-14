@@ -31,19 +31,20 @@ public class ColoringPageController
 
     ImageToColoringPageConverter converter;
     File file;
-    FileChooser fileChooser = new FileChooser();
+    FileChooser fileChooser;
     BufferedImage bufferedFinalImage;
 
-    public ColoringPageController(ImageToColoringPageConverter converter, File file)
+    public ColoringPageController(ImageToColoringPageConverter converter, File file, FileChooser fileChooser)
     {
         this.converter = converter;
         this.file = file;
+        this.fileChooser = fileChooser;
     }
 
     public ColoringPageController()
     {
-        this.converter = new ImageToColoringPageConverter();
-
+        converter = new ImageToColoringPageConverter();
+        fileChooser = new FileChooser();
     }
 
     public void onBrowseButtonClick()
@@ -51,7 +52,6 @@ public class ColoringPageController
         try
         {
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("All Images", "*.*"),
                     new FileChooser.ExtensionFilter("JPG", "*.jpg"),
                     new FileChooser.ExtensionFilter("PNG", "*.png")
             );
@@ -72,27 +72,42 @@ public class ColoringPageController
             JOptionPane.showMessageDialog(null,
                                           "That is not a valid file path.\nPlease try again.",
                                           "Error",
-                                          1);
+                                          JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public void onSaveButtonClick(ActionEvent actionEvent)
     {
-        File saveFile = fileChooser.showSaveDialog(null);
-        if (saveFile != null)
+        try
         {
-            try
+            fileChooser.getExtensionFilters().remove(0, 1);
+            File saveFile = fileChooser.showSaveDialog(null);
+            if (saveFile != null)
             {
                 ImageIO.write(SwingFXUtils.fromFXImage(modifiedImageView.getImage(),
-                                                       null), "png", saveFile);
+                                                           null), "png", saveFile);
             }
-            catch (IOException ex)
-            {
-                JOptionPane.showMessageDialog(null,
-                                              "There was an error in saving the file.\nPlease try again.",
-                                              "Error",
-                                              1);
-            }
+        }
+        catch (IOException ex)
+        {
+            JOptionPane.showMessageDialog(null,
+                                          "There was an error in saving the file.\nPlease try again.",
+                                          "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+        }
+        catch (IndexOutOfBoundsException index)
+        {
+            JOptionPane.showMessageDialog(null,
+                                          "Please select and convert a file before attempting to save.",
+                                          "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+        }
+        catch(NullPointerException nul)
+        {
+            JOptionPane.showMessageDialog(null,
+                                          "Please convert the selected file before attempting to save.",
+                                          "Error",
+                                          JOptionPane.ERROR_MESSAGE);
         }
     }
 }
