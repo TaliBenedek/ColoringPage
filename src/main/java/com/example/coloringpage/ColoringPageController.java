@@ -55,7 +55,6 @@ public class ColoringPageController
         try
         {
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("All Images", "*.*"),
                     new FileChooser.ExtensionFilter("JPG", "*.jpg"),
                     new FileChooser.ExtensionFilter("PNG", "*.png")
             );
@@ -96,6 +95,7 @@ public class ColoringPageController
 
     public void onSaveButtonClick(ActionEvent actionEvent)
     {
+        fileChooser.getExtensionFilters().remove(0,1);
         File saveFile = fileChooser.showSaveDialog(null);
         if (saveFile != null)
         {
