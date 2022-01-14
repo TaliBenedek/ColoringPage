@@ -13,7 +13,7 @@ public class ColoringPageApplication extends Application
     public void start(Stage stage) throws IOException
     {
         FXMLLoader fxmlLoader = new FXMLLoader(ColoringPageApplication.class.getResource("coloringpage-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 700, 700);
+        Scene scene = new Scene(fxmlLoader.load(), 600, 500);
         stage.setTitle("Coloring Page Converter");
         stage.setScene(scene);
         stage.show();
