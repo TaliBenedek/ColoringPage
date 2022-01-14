@@ -4,7 +4,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,9 +17,6 @@ import java.io.IOException;
 
 public class ColoringPageController
 {
-    @FXML
-    Label uploadLabel;
-
     @FXML
     Button browseButton;
 
@@ -65,26 +61,12 @@ public class ColoringPageController
                 fileNameTextField.setText(file.getAbsolutePath());
                 BufferedImage originalImage = ImageIO.read(file);
                 originalImageView.setImage(SwingFXUtils.toFXImage(originalImage, null));
+                bufferedFinalImage = converter.getColoringPage(file);
+                Image finalImage = SwingFXUtils.toFXImage(bufferedFinalImage, null);
+                modifiedImageView.setImage(finalImage);
             }
         }
 
-        catch (IOException e)
-        {
-            JOptionPane.showMessageDialog(null,
-                                          "That is not a valid file path.\nPlease try again.",
-                                          "Error",
-                                          1);
-        }
-    }
-
-    public void onConvertButtonClick(ActionEvent actionEvent)
-    {
-        try
-        {
-            bufferedFinalImage = converter.getColoringPage(file);
-            Image finalImage = SwingFXUtils.toFXImage(bufferedFinalImage, null);
-            modifiedImageView.setImage(finalImage);
-        }
         catch (IOException e)
         {
             JOptionPane.showMessageDialog(null,
