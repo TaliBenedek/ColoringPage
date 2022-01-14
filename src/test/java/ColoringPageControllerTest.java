@@ -5,11 +5,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
 
 import static org.mockito.Mockito.*;
 
+@ExtendWith(ApplicationExtension.class)
 class ColoringPageControllerTest
 {
     @Test
