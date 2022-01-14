@@ -87,7 +87,14 @@ public class ColoringPageController
         catch (IOException e)
         {
             JOptionPane.showMessageDialog(null,
-                                          "That is not a valid file path.\nPlease try again.",
+                                          "There was an error converting the selected file.\nPlease try again.",
+                                          "Error",
+                                          1);
+        }
+        catch(IllegalArgumentException arg)
+        {
+            JOptionPane.showMessageDialog(null,
+                                          "A file has not been selected.\nPlease try again.",
                                           "Error",
                                           1);
         }
@@ -95,22 +102,36 @@ public class ColoringPageController
 
     public void onSaveButtonClick(ActionEvent actionEvent)
     {
-        fileChooser.getExtensionFilters().remove(0,1);
-        File saveFile = fileChooser.showSaveDialog(null);
-        if (saveFile != null)
+        try
         {
-            try
+            fileChooser.getExtensionFilters().remove(0, 1);
+            File saveFile = fileChooser.showSaveDialog(null);
+            if (saveFile != null)
             {
                 ImageIO.write(SwingFXUtils.fromFXImage(modifiedImageView.getImage(),
-                                                       null), "png", saveFile);
+                                                           null), "png", saveFile);
             }
-            catch (IOException ex)
-            {
-                JOptionPane.showMessageDialog(null,
-                                              "There was an error in saving the file.\nPlease try again.",
-                                              "Error",
-                                              1);
-            }
+        }
+        catch (IOException ex)
+        {
+            JOptionPane.showMessageDialog(null,
+                                          "There was an error in saving the file.\nPlease try again.",
+                                          "Error",
+                                          1);
+        }
+        catch (IndexOutOfBoundsException index)
+        {
+            JOptionPane.showMessageDialog(null,
+                                          "Please select and convert a file before attempting to save.",
+                                          "Error",
+                                          1);
+        }
+        catch(NullPointerException nul)
+        {
+            JOptionPane.showMessageDialog(null,
+                                          "Please convert the selected file before attempting to save.",
+                                          "Error",
+                                          1);
         }
     }
 }
