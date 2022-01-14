@@ -72,7 +72,7 @@ public class ColoringPageController
             JOptionPane.showMessageDialog(null,
                                           "That is not a valid file path.\nPlease try again.",
                                           "Error",
-                                          1);
+                                          JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -89,14 +89,14 @@ public class ColoringPageController
             JOptionPane.showMessageDialog(null,
                                           "There was an error converting the selected file.\nPlease try again.",
                                           "Error",
-                                          1);
+                                          JOptionPane.ERROR_MESSAGE);
         }
         catch(IllegalArgumentException arg)
         {
             JOptionPane.showMessageDialog(null,
                                           "A file has not been selected.\nPlease try again.",
                                           "Error",
-                                          1);
+                                          JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -117,21 +117,21 @@ public class ColoringPageController
             JOptionPane.showMessageDialog(null,
                                           "There was an error in saving the file.\nPlease try again.",
                                           "Error",
-                                          1);
+                                          JOptionPane.ERROR_MESSAGE);
         }
         catch (IndexOutOfBoundsException index)
         {
             JOptionPane.showMessageDialog(null,
                                           "Please select and convert a file before attempting to save.",
                                           "Error",
-                                          1);
+                                          JOptionPane.ERROR_MESSAGE);
         }
         catch(NullPointerException nul)
         {
             JOptionPane.showMessageDialog(null,
                                           "Please convert the selected file before attempting to save.",
                                           "Error",
-                                          1);
+                                          JOptionPane.ERROR_MESSAGE);
         }
     }
 }
