@@ -1,4 +1,4 @@
-package com.example.coloringpage;
+package coloringpage;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
