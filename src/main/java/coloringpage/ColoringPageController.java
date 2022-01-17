@@ -1,4 +1,4 @@
-package com.example.coloringpage;
+package coloringpage;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
