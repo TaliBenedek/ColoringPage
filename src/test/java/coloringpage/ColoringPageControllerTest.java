@@ -1,7 +1,6 @@
 package coloringpage;
 
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -33,11 +31,8 @@ class ColoringPageControllerTest
         doReturn(controller.file).when(controller.fileChooser).showOpenDialog(null);
         doReturn("C:Users").when(controller.fileNameTextField).getText();
         doReturn("C:Users").when(controller.file).getAbsolutePath();
-        doReturn(originalBImage).when(ImageIO).read(controller.file);
-        doReturn(originalFxImage).when(SwingFXUtils.toFXImage(originalBImage, null));
         doReturn(originalFxImage).when(controller.originalImageView).getImage();
         doReturn(controller.bufferedFinalImage).when(controller.converter).getColoringPage(controller.file);
-        doReturn(finalFxImage).when(SwingFXUtils.toFXImage(controller.bufferedFinalImage, null));
         doReturn(finalFxImage).when(controller.modifiedImageView).getImage();
 
         //when
