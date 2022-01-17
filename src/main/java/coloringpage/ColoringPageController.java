@@ -1,4 +1,4 @@
-package com.example.coloringpage;
+package coloringpage;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -69,10 +69,11 @@ public class ColoringPageController
 
         catch (IOException e)
         {
-            JOptionPane.showMessageDialog(null,
-                                          "That is not a valid file path.\nPlease try again.",
-                                          "Error",
-                                          JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+//            JOptionPane.showMessageDialog(null,
+//                                          "That is not a valid file path.\nPlease try again.",
+//                                          "Error",
+//                                          JOptionPane.ERROR_MESSAGE);
         }
     }
 

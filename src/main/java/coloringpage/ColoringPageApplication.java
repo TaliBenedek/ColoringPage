@@ -1,4 +1,4 @@
-package com.example.coloringpage;
+package coloringpage;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
