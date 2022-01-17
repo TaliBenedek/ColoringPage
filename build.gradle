@@ -23,8 +23,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'com.example.coloringpage'
-    mainClass = 'com.example.coloringpage.ColoringPageApplication'
+    mainModule = 'coloringpage'
+    mainClass = 'coloringpage.ColoringPageApplication'
 }
 
 javafx {

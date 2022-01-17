@@ -5,4 +5,4 @@ Tali Benedek\
 Jennifer Gerstle
 
 Pictured is a sample run of the program:
-![img.png](kitten.png)
+![img_1.png](img_1.png)
